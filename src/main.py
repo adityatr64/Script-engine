@@ -1,5 +1,4 @@
 import argparse
-import os
 from transform.caesar import shift_text
 from script.parser import parse_shifted_text
 from render.svg import merge_svgs

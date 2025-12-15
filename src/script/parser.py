@@ -1,7 +1,7 @@
 import os
 from .mapping import get_glyph_filename
 
-GLYPH_DIR = '../glyphs'
+GLYPH_DIR = os.path.join(os.path.dirname(__file__), '..', 'glyphs')
 
 def parse_shifted_text(text: str):
     glyph_paths = []

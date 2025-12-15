@@ -1,4 +1,4 @@
-
+# temporary until i add syllabel based mapping
 GLYPH_MAP = {
     'a': 'a.svg',
     'b': 'ba.svg',
