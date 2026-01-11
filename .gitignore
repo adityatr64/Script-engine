@@ -13,6 +13,7 @@ dist/
 venv/
 env/
 ENV/
+test.py
 
 # Local configuration
 .env
@@ -21,6 +22,7 @@ ENV/
 # IDE / Editor metadata
 .vscode/
 .idea/
+.vs/
 
 # OS artifacts
 .DS_Store
