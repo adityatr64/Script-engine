@@ -1,63 +1,96 @@
+> [!WARNING]
+> **Note**: This README was written by AI.
+
 # Script Engine
 
-English text --> custom glyph-based SVG. This script engine ingests a string, shifts it with a Caesar cipher, maps each character to a handcrafted glyph, and stitches the glyph SVGs into a single, continuous line illustration.
+**Script Engine** translates English text into custom, handcrafted vector (SVG) script illustrations.
+
+It converts input text into International Phonetic Alphabet (IPA) phonemes, maps consonants and vowels to custom 32×32 SVG glyphs with Indic-style top vowel stacking, and renders an organic handwritten connecting line and top vowel bars.
+
+---
+
+## Features
+
+- **IPA Transliteration**: Automatically converts English text to IPA phonemes using `eng-to-ipa`.
+- **Indic-style Vowel Stacking**: When vowels follow consonants, they are dynamically stacked above the preceding consonant.
+- **Natural Handwriting Lines**: Dynamically generates smooth, organic handwritten squiggles for horizontal lines (`M ... C ...`).
+- **Continuous Baseline**: Baseline consonant lines seamlessly connect across words.
+- **Non-touching Top Vowel Lines**: Top vowel bars are inset so adjacent stacked vowels maintain visual separation.
+- **100% Glyph Coverage**: Maps 45 custom vector glyphs across standard, aspirated, retroflex, nasal, and diphthong phonemes.
+
+---
 
 ## Requirements
-- Python 3.10 or newer (tested on Windows PowerShell, works cross-platform)
-- Glyph SVG assets placed under `src/glyphs/` with names that match `src/script/mapping.py`
-- Write access to `output/` (or whichever path you target) for final SVG export
+
+- **Python**: 3.10 or newer (cross-platform: Windows, macOS, Linux)
+- **Dependencies**: Listed in `requirements.txt` (`eng-to-ipa`)
+
+---
 
 ## Installation
-```pwsh
+
+```bash
 git clone <repo-url>
-cd "Script engine"
+cd Script-engine
 python -m venv .venv
+
+# On Windows PowerShell:
 .\.venv\Scripts\Activate
+
+# On Linux/macOS:
+source .venv/bin/activate
+
 pip install -r requirements.txt
 ```
 
-## Usage
-Run the CLI entrypoint with the text you want to convert:
+---
 
-```pwsh
-cd src
-python main.py "hello world" -o ..\output\trial.svg
+## Usage
+
+Run the CLI entrypoint with your text input:
+
+```bash
+python src/main.py "the quick brown fox jumps over the lazy dog" -o output/illustration.svg
 ```
 
-Command-line options:
+### CLI Command Options
 
-| Flag | Description | Default |
-| --- | --- | --- |
-| positional `text` | Plain English string to render | required |
-| `-o`, `--output` | Destination SVG path | `output.svg` (written relative to `pwd`) |
+| Parameter | Type | Description | Default |
+| --- | --- | --- | --- |
+| `text` | Positional | Plain English string to render | *(Required)* |
+| `-o`, `--output` | Flag | Output SVG file path | `output.svg` |
 
-Workflow overview:
-1. **Transform** – `transform/caesar.py` shifts characters by +4 and normalizes to lowercase.
-2. **Parse** – `script/parser.py` resolves each shifted character to an SVG filename via `script/mapping.py` and validates that the file exists under `src/glyphs/`.
-3. **Render** – `render/svg.py` merges the glyph SVG fragments into a single document, inserting `SPACE` gaps where needed and writing the final file.
+---
 
-Outputs land in whichever path you pass to `-o`. The provided `output/` folder is ignored by Git so you can keep generated art separate from source.
+## Workflow Overview
 
-## Customization
-- **Glyphs**: Drop or update SVG files under `src/glyphs/`. Keep each glyph 32×32 for seamless joins, or adjust `GLYPH_SIZE` in `render/svg.py` if you prefer a different canvas.
-- **Character map**: Edit `GLYPH_MAP` inside `src/script/mapping.py` to remap characters, add punctuation, or tweak space handling.
-- **Cipher**: Change the shift value (default `4`) or swap in a different transform by editing `transform/caesar.py` and updating `src/main.py` accordingly.
+1. **Phoneme Conversion** ([main.py](file:///e:/Script-engine/src/main.py)): Converts English text to IPA phonemes using `eng_to_ipa.convert()`.
+2. **Parsing & Phoneme Matching** ([script/parser.py](file:///e:/Script-engine/src/script/parser.py)): Greedily matches IPA phonemes to glyph files in `src/glyphs/` via [script/mapping.py](file:///e:/Script-engine/src/script/mapping.py). Identifies baseline glyphs vs. attached stacked vowels.
+3. **SVG Rendering & Handwriting Effect** ([render/svg.py](file:///e:/Script-engine/src/render/svg.py)): Merges glyph shapes, applies `translate(target_x, target_y)` for stacked vowels, and dynamically appends squiggly hand-drawn paths for top and baseline lines.
+
+---
 
 ## Project Structure
+
 ```
-src/
-	main.py           # CLI entrypoint
-	glyphs/           # Individual glyph SVG assets
-	render/svg.py     # SVG merger
-	script/
-		mapping.py      # Character -- > glyph lookup
-		parser.py       # Resolves glyph paths
-	transform/
-		caesar.py       # Text normalization & shift
-output/             # Generated SVGs (gitignored)
+Script-engine/
+├── output/              # Generated SVG outputs (gitignored)
+├── requirements.txt     # Python dependencies
+├── README.md            # Documentation
+└── src/
+    ├── main.py          # CLI Entrypoint
+    ├── glyphs/          # 45 SVG vector glyph assets
+    ├── render/
+    │   └── svg.py       # SVG composition & handwriting line generator
+    └── script/
+        ├── mapping.py   # IPA phonemes <-> SVG glyph mapping
+        └── parser.py    # Text parsing & vowel stacking logic
 ```
 
-## Roadmap Ideas
-Not much planned for future mostly a custom tool for my book
+---
 
-Contributions welcome—open an issue or PR with your proposal before diving in.
+## Customization
+
+- **Glyph Vector Assets**: Custom SVG glyphs are stored in `src/glyphs/`. Each glyph is drawn on a `32×32` canvas.
+- **Phoneme Mapping**: Edit `GLYPH_MAP` inside `src/script/mapping.py` to add new IPA symbols, adjust phoneme bindings, or modify special characters.
+- **Rendering & Handwriting**: Adjust `stack_y_offset` (default `15.02`), `vowel_line_inset` (default `4`), or `jitter` inside `src/render/svg.py` to customize line offsets and handwritten squiggle intensity.

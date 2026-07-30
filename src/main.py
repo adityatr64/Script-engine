@@ -1,7 +1,12 @@
 import argparse
-from transform.caesar import shift_text
-from script.parser import parse_shifted_text
+import sys
+import eng_to_ipa as p
+from script.parser import parse_ipa_text
 from render.svg import merge_svgs
+
+# Ensure UTF-8 output formatting for Windows consoles printing IPA Unicode
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 
 def main():
     parser = argparse.ArgumentParser(description="Script Engine: English to Custom Script Generator")
@@ -12,10 +17,11 @@ def main():
     
     print(f"Input Text: {args.text}")
     
-    shifted = shift_text(args.text, shift=4)
-    print(f"Cipher Text (+4): {shifted}")
-    
-    paths = parse_shifted_text(shifted)
+    # Convert English text to IPA phonemes (skipping Caesar shift)
+    ipa_text = p.convert(args.text)
+    print(f"IPA Phonemes: {ipa_text}")
+
+    paths = parse_ipa_text(ipa_text)
     
     if paths:
         merge_svgs(paths, args.output)
@@ -23,4 +29,4 @@ def main():
         print("No valid glyphs found to render.")
 
 if __name__ == "__main__":
-    main()
+    main()
