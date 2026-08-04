@@ -47,13 +47,30 @@ pip install -r requirements.txt
 
 ## Usage
 
-Run the CLI entrypoint with your text input:
+### Desktop GUI Application (Python Tkinter)
+
+Launch the native GUI application:
+
+```bash
+python gui.py
+```
+
+Features of the GUI:
+- **Real-Time Input & IPA Display**: Instantly previews IPA phonemes as you type.
+- **Interactive Vector Canvas**: Click and drag to pan, use mouse wheel to zoom vector graphics.
+- **Live Parameter Controls**: Sliders for handwriting jitter, vowel stacking height, and top line insets.
+- **Color & Theme Switching**: Customize stroke and canvas background colors; pick from 4 built-in preset themes (Dark Glass, Paper Light, Golden Ink, Neon Cyber).
+- **Export & Phoneme Dictionary**: One-click SVG file export, copy SVG XML to clipboard, and inspect the 45-glyph IPA dictionary.
+
+---
+
+### CLI Command Options
+
+Run the CLI entrypoint:
 
 ```bash
 python src/main.py "the quick brown fox jumps over the lazy dog" -o output/illustration.svg
 ```
-
-### CLI Command Options
 
 | Parameter | Type | Description | Default |
 | --- | --- | --- | --- |
@@ -93,4 +110,4 @@ Script-engine/
 
 - **Glyph Vector Assets**: Custom SVG glyphs are stored in `src/glyphs/`. Each glyph is drawn on a `32×32` canvas.
 - **Phoneme Mapping**: Edit `GLYPH_MAP` inside `src/script/mapping.py` to add new IPA symbols, adjust phoneme bindings, or modify special characters.
-- **Rendering & Handwriting**: Adjust `stack_y_offset` (default `15.02`), `vowel_line_inset` (default `4`), or `jitter` inside `src/render/svg.py` to customize line offsets and handwritten squiggle intensity.
+- **Rendering & Handwriting**: Adjust `stack_y_offset` (default `14.73`), `vowel_line_inset` (default `4`), or `jitter` inside `src/render/svg.py` to customize line offsets and handwritten squiggle intensity.

@@ -16,6 +16,12 @@ def parse_ipa_text(ipa_text: str):
     prev_was_consonant = False
     
     while i < len(clean_ipa):
+        if clean_ipa[i] == '\n':
+            items.append('NEWLINE')
+            prev_was_consonant = False
+            i += 1
+            continue
+            
         match = None
         for phoneme in sorted_phonemes:
             if clean_ipa.startswith(phoneme, i):
